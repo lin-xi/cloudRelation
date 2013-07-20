@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<project name="cloudspectrum" default="build" basedir=".">
+	<property name="current.dir" location="./"/>
+	<!--css path-->
+	<property name="css.path" location="${current.dir}/"/>
+	<!--js path-->
+	<property name="js.path" location="${current.dir}/"/>
+	<!--yuicompressor path-->
+	<property name="yuicompressor.path" location="${current.dir}/lib/yuicompressor/yuicompressor-2.4.2.jar"/>
+	<!--yuicompressor path-->
+	<property name="closurecompiler.path" location="${current.dir}/lib/closure-compiler.jar"/>
+	<!--build path-->
+	<property name="build.path" location="${current.dir}/build"/>
+	
+	<target name="build" depends="minify-css, minify-js"/>
+
+	<target name="minify-css">
+		<echo>Compress CSS...</echo>
+		<apply executable="java" verbose="true" dest="${build.path}/"  failonerror="true" parallel="false">
+			<fileset dir="${css.path}" includes="*.css"/>
+			<arg line="-jar"/>
+			<arg path="${yuicompressor.path}"/>
+			<arg line="--charset utf-8"/>
+			<arg value="--type"/>
+			<arg value="css"/>
+			<arg value="-o"/>
+			<targetfile/>
+			<mapper type="glob" from="*.css" to="*.css"/>
+		</apply>
+	</target>
+
+	<target name="minify-js">
+		<echo>Compress JS...</echo>
+		<apply executable="java" verbose="true" dest="${build.path}/" failonerror="true" parallel="false">
+			<fileset dir="${js.path}" includes="*.js"/>
+			<arg line="-jar"/>
+            <arg path="${closurecompiler.path}"/>
+            <arg line="--charset utf-8"/>
+            <arg value="--warning_level"/>
+            <arg value="QUIET"/>
+            <arg value="--js"/>
+            <srcfile/>
+            <arg value="--js_output_file"/>
+            <targetfile/>
+            <mapper type="regexp" from="^(.*)\.js$" to="\1-min.js"/>
+		</apply>
+	</target>
+	
+	<target name="concat-js">
+		<echo>Concat JS...</echo>
+		<concat destfile="${build.path}/core.js">
+            <path path="${build.path}/raphael.js"/>
+            <path path="${build.path}/cloudspectrum.js"/>
+        </concat>
+	</target>
+	
+</project>

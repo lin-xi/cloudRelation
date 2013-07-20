@@ -1,0 +1,282 @@
+{
+    		id: '100000',
+    		name: 'ÈÙ¹ú¹«¼ÖÔ´',
+    		parent: 0,
+    		weight: 0,
+    		isLeaf: false,
+    		childNodes: [
+    			{
+    				id: '200000',
+		    		name: '¼Ö´úÉÆ',
+		    		parent: '100000',
+		    		weight: 10,
+		    		isLeaf: false,
+		    		data: [{title: '¶ù×Ó',	link: 'http://www.news.cn'}],
+		    		childNodes: [
+		    			{
+		    				id: '300000',
+				    		name: 'Ê·ÊÏ',
+				    		parent: '200000',
+				    		weight: 10,
+				    		isLeaf: false,
+				    		data: [
+				    			{title: 'ÆÞ×Ó',	link: 'http://www.news.cn'},
+				    			{title: 'ÆÞ×Ó',	link: 'http://www.news.cn'},
+				    			{title: 'ÆÞ×Ó',	link: 'http://www.news.cn'}
+				    		],
+				    		childNodes: [
+				    			{
+					    			id: '400001',
+									name: 'Ê·ÏæÔÆ',
+									parent: '300000',
+									weight: 10,
+									isLeaf: true,
+									data: [{title: 'ÍâËïÅ®',	link: 'http://www.news.cn'}],
+									childNodes: []
+				    			}
+				    		]
+				    	},
+		    			{
+		    				id: '300001',
+				    		name: '¼ÖÉâ',
+				    		parent: '200000',
+				    		weight: 15,
+				    		isLeaf: false,
+				    		data: [{title: '¶ù×Ó',	link: 'http://www.news.cn'}],
+				    		childNodes: [
+				    			{
+					    			id: '400002',
+									name: 'ÐÌ·òÈË',
+									parent: '300001',
+									weight: 10,
+									isLeaf: true,
+									data: [{title: 'ÆÞ×Ó',	link: 'http://www.news.cn'}],
+									childNodes: []
+				    			},
+				    			{
+					    			id: '400003',
+									name: 'ÖÜÒÌÄï',
+									parent: '300001',
+									weight: 8,
+									isLeaf: true,
+									data: [{title: 'æª',	link: 'http://www.news.cn'}],
+									childNodes: []
+				    			},
+				    			{
+					    			id: '400004',
+									name: 'ÇÉºì',
+									parent: '300001',
+									weight: 8,
+									isLeaf: true,
+									data: [{title: 'æª',	link: 'http://www.news.cn'}],
+									childNodes: []
+				    			},
+				    			{
+					    			id: '400005',
+									name: '´äÔÆ',
+									parent: '300001',
+									weight: 8,
+									isLeaf: true,
+									data: [{title: 'æª',	link: 'http://www.news.cn'}],
+									childNodes: []
+				    			},
+				    			{
+					    			id: '400006',
+									name: '¼Öçö',
+									parent: '300001',
+									weight: 15,
+									isLeaf: false,
+									data: [{title: '¶ù×Ó',	link: 'http://www.news.cn'}],
+									childNodes: [
+										{
+											id: '500000',
+											name: 'ÍõÎõ·ï',
+											parent: '400006',
+											weight: 10,
+											isLeaf: true,
+											data: [{title: 'ÆÞ×Ó',	link: 'http://www.news.cn'}],
+											childNodes: []
+										},
+										{
+											id: '500001',
+											name: 'ÓÈ¶þ½ã',
+											parent: '400006',
+											weight: 8,
+											isLeaf: true,
+											data: [{title: 'æª',	link: 'http://www.news.cn'}],
+											childNodes: []
+										},
+										{
+											id: '500002',
+											name: 'ÇïÍ©',
+											parent: '400006',
+											weight: 8,
+											isLeaf: true,
+											data: [{title: 'æª',	link: 'http://www.news.cn'}],
+											childNodes: []
+										},
+										{
+											id: '500003',
+											name: 'ÇÉ½ã',
+											parent: '400006',
+											weight: 10,
+											isLeaf: true,
+											data: [{title: 'Å®¶ù',	link: 'http://www.news.cn'}],
+											childNodes: []
+										}
+									]
+				    			},
+				    			{
+					    			id: '400007',
+									name: '¼ÖÁ¬´º',
+									parent: '300001',
+									weight: 15,
+									isLeaf: true,
+									data: [{title: '¶ù×Ó(æª)',	link: 'http://www.news.cn'}],
+									childNodes: []
+				    			}
+				    		]
+		    			},
+		    			{
+		    				id: '300002',
+				    		name: '¼ÖÕþ',
+				    		parent: '200000',
+				    		weight: 15,
+				    		isLeaf: false,
+				    		data: [{title: '¶ù×Ó',	link: 'http://www.news.cn'}],
+				    		childNodes: [
+				    			{
+					    			id: '400008',
+									name: 'Íõ·òÈË',
+									parent: '300002',
+									weight: 10,
+									isLeaf: true,
+									data: [{title: '·òÈË',	link: 'http://www.news.cn'}],
+									childNodes: [
+										{
+											id: '500004',
+											name: 'Ñ¦ÒÌÂè',
+											parent: '400008',
+											weight: 5,
+											isLeaf: true,
+											data: [{title: 'ÃÃÃÃ',	link: 'http://www.news.cn'}],
+											childNodes: [
+												{
+													id: '600000',
+													name: 'Ñ¦ó´',
+													parent: '500004',
+													weight: 10,
+													isLeaf: true,
+													data: [{title: '¶ù×Ó',	link: 'http://www.news.cn'}],
+													childNodes: []
+												},
+												{
+													id: '600001',
+													name: 'Ñ¦±¦îÎ',
+													parent: '500004',
+													weight: 10,
+													isLeaf: true,
+													data: [{title: 'Å®¶ù',	link: 'http://www.news.cn'}],
+													childNodes: []
+												}
+											]
+										}
+									]
+				    			},
+				    			{
+									id: '400009',
+									name: 'ÕÔÒÌÄï',
+									parent: '200000',
+									weight: 8,
+									isLeaf: true,
+									data: [{title: 'æª',	link: 'http://www.news.cn'}],
+									childNodes: []
+								},
+								{
+									id: '400010',
+									name: '¼ÖÖé',
+									parent: '200000',
+									weight: 15,
+									isLeaf: true,
+									data: [{title: '¶ù×Ó',	link: 'http://www.news.cn'}],
+									childNodes: []
+								},
+								{
+									id: '400011',
+									name: '¼ÖÔª´º',
+									parent: '200000',
+									weight: 15,
+									isLeaf: true,
+									data: [{title: 'Å®¶ù',	link: 'http://www.news.cn'}],
+									childNodes: []
+								},
+								{
+									id: '400012',
+									name: '¼Ö±¦Óñ',
+									parent: '200000',
+									weight: 15,
+									isLeaf: true,
+									data: [{title: '¶ù×Ó',	link: 'http://www.news.cn'}],
+									childNodes: []
+								},
+								{
+									id: '400013',
+									name: '¼ÖÌ½´º',
+									parent: '200000',
+									weight: 15,
+									isLeaf: true,
+									data: [{title: 'Å®¶ù',	link: 'http://www.news.cn'}],
+									childNodes: []
+								},
+								{
+									id: '400014',
+									name: '¼Ö»·',
+									parent: '200000',
+									weight: 15,
+									isLeaf: true,
+									data: [{title: '¶ù×Ó',	link: 'http://www.news.cn'}],
+									childNodes: []
+								}
+				    		]
+		    			},
+		    			{
+		    				id: '300003',
+				    		name: '¼ÖÃô',
+				    		parent: '200000',
+				    		weight: 15,
+				    		isLeaf: false,
+				    		data: [{title: 'Å®¶ù',	link: 'http://www.news.cn'}],
+				    		childNodes: [
+				    			{
+					    			id: '400015',
+									name: 'ÁÖÈçº£',
+									parent: '300003',
+									weight: 10,
+									isLeaf: true,
+									data: [{title: 'ÕÉ·ò',	link: 'http://www.news.cn'}],
+									childNodes: []
+				    			},
+				    			{
+				    				id: '400016',
+									name: 'ÁÖ÷ìÓñ',
+									parent: '300003',
+									weight: 10,
+									isLeaf: true,
+									data: [{title: 'Å®¶ù',	link: 'http://www.news.cn'}],
+									childNodes: []
+				    			}
+				    		]
+		    			}
+		    		]
+    			},
+    			{
+    				id: '200001',
+		    		name: '¼Ö´úÈå',
+		    		parent: '100000',
+		    		weight: 10,
+		    		isLeaf: false,
+		    		data: [{title: '¶ù×Ó',	link: 'http://www.news.cn'}],
+		    		childNodes: []
+    			}
+    		]
+    	}

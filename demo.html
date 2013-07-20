@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<title>人物图谱</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+	
+	<body>
+
+		<div>
+			<span style="display:inline-block">
+				<p>编辑区</p>
+				<div id="svg-container-edit" >
+				</div>
+			</span>
+			<span style="display:inline-block">
+				<p>显示区</p>
+				<div id="svg-container-view">
+				</div>
+			</span>
+		</div>
+
+		<div id="messagePanel" style="display:none; position: absolute; left:0; top:0; background: #fff; border:1px #000 solid;">
+			<div><a href="www.baidu.com">郭美美17.2g性爱视频流出 郭美美整容前…</a></div>
+			<div><a href="www.baidu.com">郭美美个人相册被破解 北电毕业疑似整…</a><br></div>
+			<div><a href="www.baidu.com">郭美美整容前后对比照曝光 疑做双眼皮…</a><br></div>
+		</div>
+
+		<div>
+			<textarea id="saveData" style="width:600px; height:100px"></textarea><br>
+			<button onclick="doSave()">保存</button> <button onclick="doInit()">显示</button>
+		</div>
+
+	<hr>
+	<footer>
+		<p>&copy; Leeme 2013</p>
+	</footer>
+
+    <script src="build/raphael-min.js"></script>
+    <script src="build/cloudspectrum-min.js"></script>
+    <script type="text/javascript">
+    	
+    	var json = {
+			id: '300002',
+	    		name: '贾政',
+	    		parent: '0',
+	    		weight: 15,
+	    		childNodes: [
+	    			{
+		    			id: '400008',
+						name: '王夫人',
+						parent: '300002',
+						weight: 10,
+						childNodes: [
+						]
+	    			},
+	    			{
+						id: '400009',
+						name: '赵姨娘',
+						parent: '300002',
+						weight: 8,
+						childNodes: []
+					},
+					{
+						id: '400010',
+						name: '贾珠',
+						parent: '300002',
+						weight: 15,
+						childNodes: [
+							{
+								id: '500001',
+								name: '李执',
+								parent: '400010',
+								weight: 15,
+								childNodes: [
+								]
+							},
+							{
+								id: '500002',
+								name: '贾兰',
+								parent: '400010',
+								weight: 15,
+								childNodes: [
+								]
+							}
+						]
+					},
+					{
+						id: '400011',
+						name: '贾元春',
+						parent: '300002',
+						weight: 15,
+						childNodes: [
+							{
+								id: '500002',
+								name: '贾兰',
+								parent: '400011',
+								weight: 15,
+								childNodes: [
+								]
+							}
+						]
+					},
+					{
+						id: '400012',
+						name: '贾宝玉',
+						parent: '300002',
+						weight: 15,
+						childNodes: [
+							{
+								id: '500003',
+								name: '袭人',
+								parent: '400012',
+								weight: 15,
+								childNodes: []
+							},
+							{
+								id: '500004',
+								name: '晴雯',
+								parent: '400012',
+								weight: 15,
+								childNodes: []
+							},
+							{
+								id: '500005',
+								name: '茜雪',
+								parent: '400012',
+								weight: 15,
+								childNodes: []
+							},
+							{
+								id: '500006',
+								name: '麝月',
+								parent: '400012',
+								weight: 15,
+								childNodes: []
+							},
+							{
+								id: '500007',
+								name: '秋纹',
+								parent: '400012',
+								weight: 15,
+								childNodes: []
+							},
+							{
+								id: '500008',
+								name: '惠香',
+								parent: '400012',
+								weight: 15,
+								childNodes: [
+									{
+										id: '600000',
+							    		name: '贾政',
+							    		parent: '0',
+							    		weight: 15,
+							    		childNodes: []
+									}
+								]
+							}
+						]
+					},
+					{
+						id: '400013',
+						name: '贾探春',
+						parent: '300002',
+						weight: 15,
+						childNodes: []
+					},
+					{
+						id: '400014',
+						name: '贾环',
+						parent: '300002',
+						weight: 15,
+						childNodes: []
+					}
+	    		]
+    	};
+
+    	var per = new CloudSpectrum({node: '#svg-container-edit', width:600, height:400, mode: 'edit'});
+    	per.render(json);
+
+    	function doSave(){
+    		var data = per.save();
+    		document.getElementById('saveData').value = JSON.stringify(data);
+    	}
+
+    	function doInit(){
+    		var data = JSON.parse(document.getElementById('saveData').value);
+
+    		var treeData;
+    		for(var i=0, ii=data.length; i<ii; i++){
+    			if(data[i].parent == 0){
+    				treeData = data.splice(i, 1);
+    				break;
+    			}
+    		}
+    		function iterate(nodes){
+    			for(var i=0, ii=nodes.length; i<ii; i++){
+    				var cur = nodes[i];
+    				for(var j=0; j<data.length; j++){
+		    			if(cur.id == data[j].parent){
+		    				var obj = data.splice(j, 1)[0];
+		    				cur.childNodes.push(obj);
+
+		    				iterate(cur.childNodes);
+		    			}
+	    			}
+    			}
+    		}
+    		iterate(treeData);
+
+    		console.log(treeData[0]);
+
+    		var person = new CloudSpectrum({node: '#svg-container-view', width:600, height:400, mode: 'view'});
+    		person.render(treeData[0]);
+    	}
+		
+	</script>
+
+	</body>
+</html>
