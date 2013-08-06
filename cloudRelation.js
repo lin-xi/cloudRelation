@@ -1,28 +1,30 @@
-var _uuid = 0;
-function CloudSpectrum(opt) {
-	'use strict';
-	var _DEFAULT = {
-		node: '',
-		width: 600,
-		height: 400,
-		mode: 'edit'
-	};
-	this.cfg = this.merge(_DEFAULT, opt);
-	this.cache = {};
-	this._init();
-}
+var CloudRelation = (function(){
+	var _uuid = 0;
+	function CloudRelation(opt) {
+		'use strict';
+		var _DEFAULT = {
+			node: '',
+			width: 600,
+			height: 400,
+			mode: 'edit'
+		};
+		this.cfg = this.merge(_DEFAULT, opt);
+		this.eventHandlers = [];
+		this.cache = {};
+		this._init();
+	}
 
-CloudSpectrum.prototype = {
-	constructor: CloudSpectrum,
+CloudRelation.prototype = {
+	constructor: CloudRelation,
 	_init: function(){
-		var self = this, cfg = self.cfg, dom = self.dom(), w=cfg.width, h=cfg.height;
-		node = dom.get(cfg.node);
+		var self = this, cfg = self.cfg, w=cfg.width, h=cfg.height;
+		node = self.dom().get(cfg.node);
 		node.width(w);
 		node.height(h);
 		var divId = 'cloudSpectrum-'+self._guid();
-		node.html('<div id="'+divId+'" class="ui-cloudSpectrum"></div>');
+		node.html('<div id="'+divId+'"></div>');
 		self.paper = Raphael(divId, w, h);
-		self.paper.rect(0, 0, w, h, 10).attr({'stroke': "#666"});
+		//self.paper.rect(0, 0, w, h, 10).attr({'stroke': "#666"});
 
         //Rapheal插件扩展
 		Raphael.fn.connection = function (obj1, obj2, nodeOption) {
@@ -57,10 +59,11 @@ CloudSpectrum.prototype = {
 	},
 
 	render: function(data){
-		var self = this, cfg = self.cfg, r = self.paper;
+		var self = this, cfg = self.cfg, dom = self.dom(), r = self.paper;
 		self.connections = [],
         self.shapes = [];      //svg形状集合
         self.flatData = [];    //平面数据(非树状)
+        self.data = data;
 
         self.cache = {};
         self.cache.w = cfg.width;  //画布宽
@@ -73,7 +76,6 @@ CloudSpectrum.prototype = {
 
 		//样式
 		var CENTER_STYLE = {'fill': '#5782C2', 'stroke': '#5782C2'},
-			CIRCLE_STYLE = {'fill': '#97C2EE', 'stroke': '#97C2EE'},
 			TEXT_STYLE = {'fill': '#fff', 'font-size': '14px', 'font-weight': '400'};
 
 		//极径
@@ -105,6 +107,7 @@ CloudSpectrum.prototype = {
 					tar.attr(att);
 					tardata.theta = Raphael.rad(Raphael.angle(finalx, finaly, cache.w/2, cache.h/2));
 					tardata.radius = self._computeLength(cache.w/2, cache.h/2, finalx, finaly);
+
 					delay = true;
 					setTimeout(function(){
 						delay = false;
@@ -135,6 +138,18 @@ CloudSpectrum.prototype = {
 				}).mouseout(function () {
 					sha.stop().animate({transform: ""}, 500, "backOut");
 				});
+
+				if(cfg.mode == 'view'){
+					sha.click(function(e){
+						var di = this.data('dataIndex');
+						self._publish('nodeClick', {x:e.pageX, y:e.pageY, id: flatData[di].id});
+					});
+				}else{
+					sha.dblclick(function(e){
+						var di = this.data('dataIndex');
+						self._publish('nodeClick', {x:e.pageX, y:e.pageY, id: flatData[di].id});
+					});
+				}
 			})(s);
 		}
 
@@ -164,15 +179,13 @@ CloudSpectrum.prototype = {
 						cln.stop().animate({'transform': ""}, 500, "backOut");
 					});
 					cln.click(function(e){
-						var mp = document.getElementById('messagePanel');
-						mp.style.display = 'block';
-						mp.style.left = (e.x+30) + 'px';
-						mp.style.top = e.y-25 + 'px';
+						var clickX = e.pageX;
+						var clickY = e.pageY;
+						self._publish('relationClick', {x: clickX, y:clickY, id: opt.id, parentId: opt.pid});
 					});
 				}
 			})(cs.lineNode, cs.lineOpt);
 		}
-
 
 		/**
 		 * 遍历绘制节点
@@ -188,11 +201,13 @@ CloudSpectrum.prototype = {
 						var x = cache.w/2, y = cache.h/2;
 						//中心点
 						var idx = self.shapes.length;
-						shapes.push(r.set().push(r.circle(x, y, circleRadius*1.2).attr(CENTER_STYLE).data('setIndex', idx), r.text(x, y, node.name).attr(TEXT_STYLE).data('setIndex', idx)));
+						var sha = drawShape(node.shape+'', [x, y], circleRadius*1.2);
+						sha.attr({'fill': node.color, 'stroke': node.color}).data('setIndex', idx);
+						shapes.push(r.set().push(sha, r.text(x, y, node.name).attr(TEXT_STYLE).data('setIndex', idx).data('dataIndex', idx)));
 						objs[node.id] = {'x': x, 'y': y, 'theta':0, 'index':0};
 						node.theta = 0;
 						node.radius = 0;
-						flatData.push(node);
+						flatData.push(self.clone(node));
 						//第一层节点
 						if(node.childNodes.length > 0){
 							levelStack.push(node.childNodes.length);
@@ -282,17 +297,123 @@ CloudSpectrum.prototype = {
 			}else{
 				p = self._polarToXY(pos, node.radius, node.theta);
 			}
-			shapes.push(r.set().push(r.circle(p[0], p[1], circleRadius).attr(CIRCLE_STYLE).data('setIndex', idx), r.text(p[0], p[1], node.name).attr(TEXT_STYLE).data('setIndex', idx).data('dataIndex', index)));
+			var nodeShape;
+			if(cfg.mode == 'edit'){
+				nodeShape = drawShape('3', p, circleRadius).attr({'fill': node.color, 'stroke': node.color}).data('setIndex', idx);
+			}else{
+				nodeShape = drawShape(node.shape+'', p, circleRadius).attr({'fill': node.color, 'stroke': node.color}).data('setIndex', idx);
+			}
+			shapes.push(r.set().push(nodeShape, r.text(p[0], p[1], node.name).attr(TEXT_STYLE).data('setIndex', idx).data('dataIndex', index)));
 			objs[node.id] = {'x': p[0], 'y': p[1], 'theta': angle, 'index': idx};
 			node.theta = angle;
 			node.radius = rad;
-			flatData.push(node);
+			flatData.push(self.clone(node));
+		}
+
+		function drawShape(shapeType, p, circleRadius){
+			var shape;
+			switch(shapeType){
+				case '1':
+					shape = r.rect(p[0]-circleRadius, p[1]-circleRadius, circleRadius*2, circleRadius*2);
+				break;
+				case '2':
+					shape = r.ellipse(p[0], p[1], circleRadius, circleRadius*0.6);
+				break;
+				case '3':
+					shape = r.circle(p[0], p[1], circleRadius);
+				break;
+				case '4':
+					shape = drawPentagonal(p[0], p[1], circleRadius);
+				break;
+				case '5':
+					shape = drawTriangle(p[0], p[1], circleRadius);
+				break;
+				case '6':
+					shape = drawHexagon(p[0], p[1], circleRadius);
+				break;
+				case '7':
+					shape = r.rect(p[0]-circleRadius, p[1]-circleRadius, circleRadius*2, circleRadius*2, 10);
+				break;
+				default:
+					shape = r.circle(p[0], p[1], circleRadius);
+				break;
+			};
+			return shape;
+		}
+
+		//三角形
+		function drawTriangle(x, y, rad){
+			var cos = rad*Math.cos(Math.PI/3), sin = rad*Math.sin(Math.PI/3);
+			var x1 = x-sin, y1 = y+cos,
+				x2 = x+sin, y2 = y+cos,
+				x3 = x, y3 = y-rad;
+			var path = ['M', x1, y1, 'L', x2, y2, 'L', x3, y3].join(' ');
+			return r.path(path);
+		}
+		//五角形
+		function drawPentagonal(x, y, rad){
+			var cos36 = rad*Math.cos(36*Math.PI/180), sin36 = rad*Math.sin(36*Math.PI/180),
+				cos18 = rad*Math.cos(18*Math.PI/180), sin18 = rad*Math.sin(18*Math.PI/180);
+			var x1 = x-sin36, y1 = y+cos36,
+				x2 = x+sin36, y2 = y+cos36,
+				x3 = x+cos18, y3 = y-sin18,
+				x4 = x,       y4 = y-rad,
+				x5 = x-cos18, y5 = y-sin18;
+			var path = ['M', x1, y1, 'L', x2, y2, 'L', x3, y3, 'L', x4, y4, 'L', x5, y5].join(' ');
+			return r.path(path);
+		}
+		//六角形
+		function drawHexagon(x, y, rad){
+			var cos30 = rad*Math.cos(Math.PI/6), sin30 = rad*Math.sin(Math.PI/6);
+			var x1 = x-sin30, y1 = y+cos30,
+				x2 = x+sin30, y2 = y+cos30,
+				x3 = x+rad,   y3 = y,
+				x4 = x+sin30, y4 = y-cos30,
+				x5 = x-sin30, y5 = y-cos30,
+				x6 = x-rad,   y6 =y;
+			var path = ['M', x1, y1, 'L', x2, y2, 'L', x3, y3, 'L', x4, y4, 'L', x5, y5, 'L', x6, y6].join(' ');
+			return r.path(path);
 		}
 	},
 
 	save: function(){
+		var self = this, result=[];
+		for(var i=self.flatData.length-1; i>=0; i--){
+			var item = self.flatData[i];
+			result.push(item);
+		}
+		return result;
+	},
+
+	preview: function(){
+		var self = this, data=self.data, flatData=self.flatData;
+		
+		function iterate(nodes){
+			for(var i=0, ii=nodes.length; i<ii; i++){
+				var cur = nodes[i];
+				for(var j=0; j<flatData.length; j++){
+					if(cur.id == flatData[j].id){
+						cur.theta = flatData[j].theta;
+						cur.radius = flatData[j].radius;
+					}
+					iterate(cur.childNodes);
+				}
+			}
+		}
+		iterate([data]);
+		return data;
+	},
+
+	on: function(type, func){
 		var self = this;
-		return self.flatData;
+		self.eventHandlers[type] = func;
+	},
+
+	_publish: function(type, data){
+		var self = this, handlers = self.eventHandlers;
+		if(handlers[type]){
+			handlers[type].call(null, data);
+		}
 	},
 
 	//generate global unique id
@@ -327,14 +448,44 @@ CloudSpectrum.prototype = {
 		return obj2;
 	},
 
+	clone: function(obj){
+		var objClone = new Object();
+		for(var key in obj){
+        	if (Object.prototype.toString.call(obj[key]) == '[object Array]'){
+                objClone[key] = [];
+            }else{
+                objClone[key] = obj[key];
+            }
+        }
+        return objClone;
+    },
+
+	util: {
+		substitute: function(str, obj){
+			if (!(Object.prototype.toString.call(str) === '[object String]')) {
+        		return '';
+    		}
+		    if(!(Object.prototype.toString.call(obj) === '[object Object]' && 'isPrototypeOf' in obj)) {
+		        return str;
+		    }
+    		// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/replace
+    		return str.replace(/\{([^{}]+)\}/g, function(match, key) {
+        		var value = obj[key];
+        		return ( value !== undefined) ? ''+value :'';
+    		});
+		}
+	},
+
 	//dom封装
 	dom: function(){
 		function Dom(){
 			this.elements=[];
 			EventTarget.call(this);
 		}
+
 		Dom.prototype = {
 			constructor: Dom,
+			_events: [],
 			get: function(selector, parent){
 				var element;
 				if(typeof arguments[0]=="string"){
@@ -394,14 +545,64 @@ CloudSpectrum.prototype = {
 			},
 			html: function(ele){
 				this.elements[0].innerHTML = ele;
+			},
+			show: function(){
+				this.each(function(el){
+					el.style.display = 'block'; 
+				});
+			},
+			hide: function(){
+				this.each(function(el){
+					el.style.display = 'none'; 
+				});
+			},
+			ua: {
+				ie: navigator.userAgent.indexOf("IE") < 0 ? false : true,
+				firefox: navigator.userAgent.indexOf("Firefox") < 0 ? false : true,
+				chrome: navigator.userAgent.indexOf("Chrome") < 0 ? false : true
+			},
+			bind: function(type, func){
+				var me = this;
+				this._events[type] = func;
+				for(var i=0,l=this.elements.length; i<l; i++){
+					var item = this.elements[i];
+					if(item.addEventListener){
+						item.addEventListener(type, proxyHandler, false);
+					} else if (element.attachEvent){
+						item.attachEvent('on'+type, proxyHandler);
+					}
+				}
+				function proxyHandler(event){
+					event = event || window.event;
+					var eve = new _Event(event);
+					eve.type = event.type;
+					eve.target = event.target || event.srcElement;
+					eve.pageX = event.clientX || event.pageX;
+					eve.pageY = event.clientY || event.pageY;
+					eve.button = event.button&1?1:(event.button&2?3:(event.button&4?2:0));
+					me._events[type].call(me, eve);
+				}
+				function _Event(eve){
+					this.eve = eve;
+				}
+				return this;
+			},
+			triggle: function(type, data){
+				this.each(this._elements, function(i, item){
+					if(item.fireEvent){
+						item.fireEvent(type, data);
+					}else if(item.dispatchEvent(event)){
+						item.dispatchEvent(type, data);
+					}
+				});
 			}
 		};
-
 		function EventTarget(){
 			this.handlers = {};
 		}
 		EventTarget.prototype = {
 			constructor: EventTarget, 
+
 			on: function(type, handler){ 
 				this.handlers[type] = []; 
 			},
@@ -430,4 +631,9 @@ CloudSpectrum.prototype = {
 		};
 		return new Dom();
 	}
+
 };
+
+return CloudRelation;
+
+})();

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<title>任务关系图</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<style type="text/css">
+		#messagePanel{
+			display:none; position: absolute; left:0; top:0; background: #fff; border:1px #000 solid; border-radius: 10px;
+		}
+	</style>
+
+	</head>
+	
+	<body>
+
+		<div id="svg-container">
+		</div>
+		
+		<div id="messagePanel">
+			郭美美17.2g性爱视频流出 郭美美整容前…<br>
+			郭美美个人相册被破解 北电毕业疑似整…<br>
+			郭美美整容前后对比照曝光 疑做双眼皮…<br>
+		</div>
+
+	<hr>
+	<footer>
+		<p>&copy; Leeme 2013</p>
+	</footer>
+
+    <script src="cloudspectrum.js"></script>
+    <script type="text/javascript">
+	
+		//连接
+		Raphael.fn.connection = function (obj1, obj2, nodeOption) {
+			var line;
+			if (obj1.line && obj1.from && obj1.to) {
+				line = obj1;
+				obj1 = line.from;
+				obj2 = line.to;
+			}
+			var bb1 = obj1.getBBox(),
+				bb2 = obj2.getBBox(),
+				po = [{x: bb1.x + bb1.width / 2, y: bb1.y + bb1.height / 2},
+					  {x: bb2.x + bb2.width / 2, y: bb2.y + bb2.height / 2},
+					  {x: bb2.x + bb2.width / 2, y: bb2.y + bb2.height / 2},
+					 ],
+				poc = {x: (po[1].x + po[0].x)/2, y: (po[1].y + po[0].y)/2};
+				
+			//var path = ["M", x1.toFixed(3), y1.toFixed(3), "L", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",");
+			var path = ["M", po[0].x, po[0].y, "L", po[1].x, po[1].y].join(",");
+			if (line && line.line) {
+				line.line.toBack().attr({path: path});
+				line.lineNode.attr({x: poc.x, y:poc.y, cx: poc.x, cy: poc.y});
+			} else {
+				var color = typeof line == "string" ? line : "#000";
+				return {
+					line: this.path(path).toBack().attr({stroke: color, 'stroke-width': '2px', fill: "none"}),
+					from: obj1,
+					to: obj2,
+					lineNode: r.set().push(this.circle(poc.x, poc.y, 10).attr({fill: '#94CFF6'}), this.text(poc.x, poc.y, '?')),
+					lineOpt: nodeOption
+				};
+			}
+		};
+	
+		var r = Raphael("svg-container", 1000, 600);
+		r.rect(0, 0, 1000, 600, 10).attr({stroke: "#666"});
+		/*
+		
+		*/
+		var ms=false, tar, mar;
+		var dragger = function () {
+			if(this.data('set')){
+				tar = shapes[this.data('set')];
+				var btar = tar.getBBox();
+				mar = {};
+				ms = true;
+				mar.ox = btar.x;
+				mar.oy = btar.y;
+				mar.cox = btar.x + btar.width / 2;
+				mar.coy = btar.y + btar.height / 2;
+				//tar.animate({"fill-opacity": .5}, 500);
+			}
+		},
+		move = function (dx, dy) {
+			if(ms){
+				var att = {x: mar.cox + dx, y: mar.coy + dy, cx: mar.cox + dx, cy: mar.coy + dy};
+				tar.attr(att);
+				for (var i = connections.length; i--;) {
+					r.connection(connections[i]);
+				}
+				r.safari();
+			}
+        },
+        up = function () {
+			if(ms){
+				ms = false;
+				//tar.animate({"fill-opacity": 1}, 500);
+			}
+        },
+		
+        connections = [],
+        shapes = [  r.set().push(r.circle(500, 300, 80).attr({fill: Raphael.getColor(), stroke: Raphael.getColor()}).data('set', 0), 
+								 r.text(500, 300, "郭美美").attr({fill: '#fff', 'font-size': '20px', 'font-weight': '400'}).data('set', 0)),
+					r.set().push(r.circle(500, 100, 50).attr({fill: Raphael.getColor(), stroke: Raphael.getColor()}).data('set', 1),
+								 r.text(500, 100, "完整版").attr({fill: '#fff', 'font-size': '20px', 'font-weight': '400'}).data('set', 1)),
+                    r.set().push(r.circle(500, 500, 50).attr({fill: Raphael.getColor(), stroke: Raphael.getColor()}).data('set', 2),
+								 r.text(500, 500, "种子").attr({fill: '#fff', 'font-size': '20px', 'font-weight': '400'}).data('set', 2)),
+					r.set().push(r.circle(200, 300, 50).attr({fill: Raphael.getColor(), stroke: Raphael.getColor()}).data('set', 3),
+                				 r.text(200, 300, "淘宝店").attr({fill: '#fff', 'font-size': '20px', 'font-weight': '400'}).data('set', 3)),
+					r.set().push(r.circle(800, 300, 50).attr({fill: Raphael.getColor(), stroke: Raphael.getColor()}).data('set', 4), 
+					             r.text(800, 300, "干爹").attr({fill: '#fff', 'font-size': '20px', 'font-weight': '400'}).data('set', 4)),
+					r.set().push(r.circle(300, 100, 50).attr({fill: Raphael.getColor(), stroke: Raphael.getColor()}).data('set', 5), 
+					             r.text(300, 100, "整容").attr({fill: '#fff', 'font-size': '20px', 'font-weight': '400'}).data('set', 5)),
+                ];
+				
+		for (var i = 0, ii = shapes.length; i < ii; i++) {
+			var color = Raphael.getColor();
+			var s = shapes[i];
+			s.attr({cursor: "move"});
+			s.drag(move, dragger, up);
+			(function(sha){
+				sha.mouseover(function () {
+					sha.stop().animate({transform: "s1.3 1.3"}, 500, "backOut");
+				}).mouseout(function () {
+					sha.stop().animate({transform: ""}, 500, "backOut");
+				});
+			})(s);
+		}
+				
+		connections.push(r.connection(shapes[0], shapes[1], {id:20000}));
+		connections.push(r.connection(shapes[0], shapes[2], {id:20001}));
+		connections.push(r.connection(shapes[0], shapes[3], {id:20002}));
+		connections.push(r.connection(shapes[0], shapes[4], {id:20003}));
+		connections.push(r.connection(shapes[0], shapes[5], {id:20004}));
+		
+		for (var i = 0, ii = connections.length; i < ii; i++) {
+			var cs = connections[i];
+			(function(cln, opt){
+				if(cln){
+					cln.mouseover(function () {
+						cln.stop().animate({transform: "s1.2 1.2"}, 500, "backOut");
+					}).mouseout(function () {
+						cln.stop().animate({transform: ""}, 500, "backOut");
+					});
+					
+					cln.click(function(e){
+						console.log(e.x, e.y);
+						var mp = document.getElementById('messagePanel');
+						mp.style.display = 'block';
+						mp.style.left = (e.x+30) + 'px';
+						mp.style.top = e.y-25 + 'px';
+					});
+				}
+			})(cs.lineNode, cs.lineOpt);
+		}
+		
+	</script>
+
+	</body>
+</html>

@@ -1,0 +1,171 @@
+	{
+			id: '300002',
+    		name: 'º÷’˛',
+    		parent: '0',
+			type: 'people',
+			color: '#ff0000',
+    		weight: 15,
+    		childNodes: [
+    			{
+	    			id: '400008',
+					name: 'Õı∑Ú»À',
+					parent: '300002',
+					weight: 10,
+					type: 'place',
+					color: '#F16729',
+					childNodes: [
+					]
+    			},
+    			{
+					id: '400009',
+					name: '’‘“ÃƒÔ',
+					parent: '300002',
+					weight: 8,
+					type: 'people',
+					color: '#CA0D86',
+					childNodes: []
+				},
+				{
+					id: '400010',
+					name: 'º÷÷È',
+					parent: '300002',
+					weight: 15,
+					type: 'people',
+					color: '#1F1F1F',
+					childNodes: [
+						{
+							id: '500001',
+							name: '¿Ó÷¥',
+							parent: '400010',
+							weight: 15,
+							type: 'people',
+							color: '#87B11D',
+							childNodes: [
+							]
+						},
+						{
+							id: '500002',
+							name: 'º÷¿º',
+							parent: '400010',
+							weight: 15,
+							type: 'people',
+							color: '#3277B5',
+							childNodes: [
+							]
+						}
+					]
+				},
+				{
+					id: '400011',
+					name: 'º÷‘™¥∫',
+					parent: '300002',
+					weight: 15,
+					type: 'people',
+					color: '#F89322',
+					childNodes: [
+						{
+							id: '500002',
+							name: 'º÷¿º',
+							parent: '400011',
+							weight: 15,
+							type: 'people',
+							color: '#F16729',
+							childNodes: [
+							]
+						}
+					]
+				},
+				{
+					id: '400012',
+					name: 'º÷±¶”Ò',
+					parent: '300002',
+					weight: 15,
+					type: 'people',
+					color: '#F89322',
+					childNodes: [
+						{
+							id: '500003',
+							name: 'œÆ»À',
+							parent: '400012',
+							weight: 15,
+							type: 'people',
+							color: '#FFCF14',
+							childNodes: []
+						},
+						{
+							id: '500004',
+							name: '«Áˆ©',
+							parent: '400012',
+							weight: 15,
+							type: 'people',
+							color: '#FFEA0D',
+							childNodes: []
+						},
+						{
+							id: '500005',
+							name: '‹Á—©',
+							parent: '400012',
+							weight: 15,
+							type: 'people',
+							color: '#87B11D',
+							childNodes: []
+						},
+						{
+							id: '500006',
+							name: '˜Í‘¬',
+							parent: '400012',
+							weight: 15,
+							type: 'people',
+							color: '#008253',
+							childNodes: []
+						},
+						{
+							id: '500007',
+							name: '«ÔŒ∆',
+							parent: '400012',
+							weight: 15,
+							type: 'people',
+							color: '#3277B5',
+							childNodes: []
+						},
+						{
+							id: '500008',
+							name: 'ª›œ„',
+							parent: '400012',
+							weight: 15,
+							type: 'people',
+							color: '#4C549F',
+							childNodes: [
+								{
+									id: '300002',
+						    		name: 'º÷’˛',
+						    		parent: '500008',
+						    		weight: 15,
+						    		type: 'people',
+									color: '#F16729',
+						    		childNodes: []
+								}
+							]
+						}
+					]
+				},
+				{
+					id: '400013',
+					name: 'º÷ÃΩ¥∫',
+					parent: '300002',
+					weight: 15,
+					type: 'people',
+					color: '#764394',
+					childNodes: []
+				},
+				{
+					id: '400014',
+					name: 'º÷ª∑',
+					parent: '300002',
+					weight: 15,
+					type: 'people',
+					color: '#CA0D86',
+					childNodes: []
+				}
+    		]
+    	}
